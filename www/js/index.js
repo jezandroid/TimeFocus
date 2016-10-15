@@ -40,9 +40,18 @@ var app = {
     onDeviceReady: function () {
         app.receivedEvent('deviceready');
 
-        // navigator.notification.beep(2);
-        
         globalTick();
+
+        $("#popupAddChunk").popup({
+            afteropen: function (event, ui) {
+                $("#add-chunk-name").focus();
+            }
+        });
+        $("#popupEditChunk").popup({
+            afteropen: function (event, ui) {
+                $("#edit-chunk-name").focus();
+            }
+        });
 
     },
     // Update DOM on a Received Event
@@ -71,17 +80,20 @@ function globalTick() {
     if (activeChunk) {
         oldElapsedSecs = parseInt($("#chunk-" + activeChunkId).attr("data-elapsed-secs"));
         newElapsedSecs = oldElapsedSecs + 1;
-        $("#chunk-" + activeChunkId).attr("data-elapsed-secs",newElapsedSecs)
-        $("#chunk-" + activeChunkId + " .chunk-elapsed-mins").text(parseInt(newElapsedSecs/60));
-        $("#chunk-" + activeChunkId + " .chunk-elapsed-secs").text(newElapsedSecs - (parseInt(newElapsedSecs/60)*60));
+        $("#chunk-" + activeChunkId).attr("data-elapsed-secs", newElapsedSecs)
+        $("#chunk-" + activeChunkId + " .chunk-elapsed-mins").text(parseInt(newElapsedSecs / 60));
+        $("#chunk-" + activeChunkId + " .chunk-elapsed-secs").text(newElapsedSecs - (parseInt(newElapsedSecs / 60) * 60));
     }
     setTimeout(globalTick, 1000);
 }
 
 function addChunk(chunkId, chunkName, chunkMins) {
-    var htmlBlock = "<li data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'><h2 class='chunk-name'>" + chunkName + "</h2><p><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span>/<span class='chunk-mins'>" + chunkMins + "</span> mins"
+    var htmlBlock = "<li data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
+    htmlBlock += "<h2 class='chunk-name'>" + chunkName + "</h2>"
+    htmlBlock += "<p><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span>/<span class='chunk-mins'>" + chunkMins + "</span> mins"
     htmlBlock += "<a href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
-    htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' onclick='javascript:setEditChunkFormId(" + chunkId + ");' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'><i class='zmdi zmdi-edit zmd-2x'></i></a>"
+    htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
+    htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'><i class='zmdi zmdi-edit zmd-2x'></i></a>"
     htmlBlock += "</p></li><hr>"
     $("#listholder").append(htmlBlock);
     // $('<div/>', {
@@ -136,8 +148,10 @@ function resetAddChunkForm() {
     $("#add-chunk-mins").val(5);
 }
 
-function setEditChunkFormId(chunkId) {
+function setEditChunkForm(chunkId) {
     $("#edit-chunk-id").val(chunkId);
+    $("#edit-chunk-name").val($("#chunk-" + chunkId).children("h2.chunk-name").text());
+    $("#edit-chunk-mins").val($("#chunk-" + chunkId + " .chunk-mins").text());
 }
 
 function setActiveChunkId(chunkId) {
