@@ -85,27 +85,28 @@
                 <label for="add-chunk-name">Name:</label>
                 <input type="text" name="add-chunk-name" id="add-chunk-name" value="" data-clear-btn="true" placeholder="">
                 <label for="add-chunk-mins">Minutes:</label>
-                <input type="range" name="add-chunk-mins" id="add-chunk-mins" value="0" min="5" max="60" data-highlight="true">
+                <input type="range" name="add-chunk-mins" id="add-chunk-mins" value="5" min="5" step="5" max="60" data-highlight="true">
 
                 <a href="dialog/index.html" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-mini ui-btn-inline ui-btn-primary">Cancel</a>
                 <a id="btn_add_chunk" href="dialog/index.html" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-mini ui-btn-inline ui-btn-primary">Ok</a>
 
             </div>
         </div>
+
         <div data-role="popup" id="popupEditChunk">
             <div data-role="content">
                 <label for="edit-chunk-name">Name:</label>
                 <input type="hidden" id="edit-chunk-id">
                 <input type="text" name="edit-chunk-name" id="edit-chunk-name" value="" data-clear-btn="true" placeholder="">
                 <label for="edit-chunk-mins">Minutes:</label>
-                <input type="range" name="edit-chunk-mins" id="edit-chunk-mins" value="0" min="5" max="60" data-highlight="true">
+                <input type="range" name="edit-chunk-mins" id="edit-chunk-mins" value="5" min="5" step="5" max="60" data-highlight="true">
 
                 <a href="dialog/index.html" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-mini ui-btn-inline ui-btn-primary">Cancel</a>
                 <a id="btn_edit_chunk" href="dialog/index.html" data-rel="back" data-role="button" data-inline="true" class="ui-btn ui-mini ui-btn-inline ui-btn-primary">Ok</a>
 
             </div>
         </div>        
-
+        <!-- round + button -->
         <a data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-transition="pop" class="ui-btn ui-btn-inline ui-btn-fab ui-btn-fab-bottom ui-btn-raised clr-warning waves-effect waves-button"
             href="#popupAddChunk" onclick="javascript:resetAddChunkForm();">
             <i class="zmdi zmdi-plus zmd-2x"></i>
