@@ -156,6 +156,12 @@ function setEditChunkForm(chunkId) {
 
 function setActiveChunkId(chunkId) {
     activeChunkId = chunkId;
+    if (chunkId > 0){
+        window.plugins.insomnia.keepAwake();
+    }
+    else{
+        window.plugins.insomnia.allowSleepAgain();
+    }
 }
 
 
