@@ -2,6 +2,65 @@
 
 /*TimeFocus styles*/
 
+.chunk {
+    background-color: #323232 !important;
+	width: 100%;
+}
+
+.chunk div.donut-time {
+	/*position:absolute;
+    top:0px;
+    left:0px;
+	z-index: 2;*/
+    width: 70px;
+	float: left;
+}
+
+
+.chunk div.start-stop {
+    width: 70px;
+	margin: 7px 0 0 14px;
+	float: left;
+	/*z-index: 1;
+	position: absolute;*/
+}
+.chunk div.chunk-name {
+    width: auto;
+	float: left;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	font-size: 24px;
+	color: #cdcdcd;
+	text-shadow: none;
+}
+.chunk div.edit {
+    width: 40px;
+	float: left;
+}
+
+.chunk-elapsed-secs {
+	font-size: 12px;
+}
+
 .active-chunk {
     background-color: yellow !important;
+}
+
+.play-button{
+text-shadow: none;
+}
+pause-button{
+text-shadow: none;
+}
+.edit-button{
+text-shadow: none;
+}
+
+/*
+* Charts
+*/
+
+.nd2-chart-tf {
+	width: 100%;
+	margin: 48px auto;
+	height: 50px;
 }

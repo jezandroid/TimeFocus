@@ -158,7 +158,8 @@ code {
  */
 
 .ui-overlay-a, .ui-page-theme-a, .ui-page-theme-a .ui-panel-wrapper {
-	background-color: #ffffff;
+	background-color: #323232; /*timefocus*/
+	/*background-color: #ffffff;	*/
 	border-color: rgba(0,0,0,.87);
 	color: rgba(0, 0, 0, 0.87);
 }
@@ -1482,9 +1483,12 @@ html >body .ui-rangeslider .ui-rangeslider-sliders .ui-slider-track:first-child 
 */
 
 .nd2-chart {
-	width: 100%;
+	/*width: 100%;
 	margin: 48px auto;
-	height: 250px;
+	height: 250px;*/
+	width: 50px;
+	margin: 5px auto;
+	height: 50px;
 }
 
 .nd2-chart.nd2-chart-large {
