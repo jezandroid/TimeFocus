@@ -83,22 +83,63 @@ function globalTick() {
         $("#chunk-" + activeChunkId).attr("data-elapsed-secs", newElapsedSecs)
         $("#chunk-" + activeChunkId + " .chunk-elapsed-mins").text(parseInt(newElapsedSecs / 60));
         $("#chunk-" + activeChunkId + " .chunk-elapsed-secs").text(newElapsedSecs - (parseInt(newElapsedSecs / 60) * 60));
+        remainingSecs = $("#chunk-" + activeChunkId).attr("data-total-secs") - newElapsedSecs
+        var newData = [
+            { "name": "elapsed", "hvalue": newElapsedSecs, "color": "#FFFFFF" },
+            { "name": "remaining", "hvalue": remainingSecs, "color": "#000000" }
+        ];
+
+        $(".exp_" + activeChunkId).donutpie('update', newData);
+
+        if (newElapsedSecs = remainingSecs){
+            navigator.vibrate(1000);
+        }
+
     }
     // we can also record how time has been spent on every tick
     setTimeout(globalTick, 1000);
 }
 
 function addChunk(chunkId, chunkName, chunkMins) {
-    var htmlBlock = "<li data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
-    htmlBlock += "<h2 class='chunk-name'>" + chunkName + "</h2>"
-    htmlBlock += "<p><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span>/<span class='chunk-mins'>" + chunkMins + "</span> mins"
-    htmlBlock += "<a class='play-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
-    htmlBlock += "<a style='display: none;' class='pause-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:setActiveChunkId(0);'><i class='zmdi zmdi-pause zmd-2x'></i></a>"
+    var htmlBlock = "<li data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
+    htmlBlock += "<div class='donut-time exp_" + chunkId + "'></div>"
+    htmlBlock += "<div class='start-stop'>"
+    htmlBlock += "<a class='play-button' href='#' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
+    htmlBlock += "<a style='display: none;' class='pause-button' href='#' onclick='javascript:setActiveChunkId(0);'><i class='zmdi zmdi-pause zmd-2x'></i></a>"
+        
+    
+    htmlBlock += "</div>"
+    
+    htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
+    htmlBlock += "<div class='chunk-name'>" + chunkName + "</div>"
+    htmlBlock += "<div class='edit'>"
     htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
-    htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'><i class='zmdi zmdi-edit zmd-2x'></i></a>"
-    htmlBlock += "<a class='delete-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:deleteChunk(" + chunkId + ");'><i class='zmdi zmdi-delete zmd-2x'></i></a>"
-    htmlBlock += "</p></li>"
+    htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='edit-button' ><i class='zmdi zmdi-edit zmd-2x'></i></a>"
+    // htmlBlock += "<a class='delete-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:deleteChunk(" + chunkId + ");'><i class='zmdi zmdi-delete zmd-2x'></i></a>"    
+
+    htmlBlock += "</div>"
+
+// class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'
+    
+
+    htmlBlock += "</li>"
     $("#listholder").append(htmlBlock);
+
+    var data = [
+        { "name": "elapsed", "hvalue": 0, "color": "#FFFFFF" },
+        { "name": "remaining", "hvalue": 1, "color": "#000000" }
+    ];
+
+    // $(".exp").donutpie();
+
+    $(".exp_" + chunkId).donutpie({
+        radius: 85,
+        tooltip: false
+    });
+    $(".exp_" + chunkId).donutpie('update', data);
+    $(".exp_" + chunkId).donutpie
+
+
     // $('<div/>', {
     //     "id": 'foo',
     //     "name": 'fooDiv',
@@ -122,6 +163,7 @@ function addChunk(chunkId, chunkName, chunkMins) {
     //     },
     //     ttl: 2000 // optional, time-to-live in ms (default: 3000)
     // });
+
     chunkCount += 1;
 }
 
@@ -129,18 +171,18 @@ function editChunk(chunkId, chunkName, chunkMins) {
     //get the chunk's li
     //set its name to chunkName
     //set its mins to chunkMins
-    $("#chunk-" + chunkId).children("h2.chunk-name").text(chunkName);
+    $("#chunk-" + chunkId).children("div.chunk-name").text(chunkName);
     $("#chunk-" + chunkId + " .chunk-mins").text(chunkMins);
     // $("#chunk-" + chunkId).children("p").children("span.chunk-mins").text(chunkMins + " mins"); //NOT WORKING
     // $("#chunk-" + chunkId + " > .chunk-name").val(chunkName);
     // $("#chunk-" + chunkId + " > .chunk-mins").val(chunkMins);
 }
 
-function deleteChunk(chunkId){
-    if(activeChunkId == chunkId){
+function deleteChunk(chunkId) {
+    if (activeChunkId == chunkId) {
         activeChunkId = 0;
     }
-    $("#chunk-" + chunkId).slideUp("slow",function(){$("#chunk-" + chunkId).remove();});
+    $("#chunk-" + chunkId).slideUp("slow", function () { $("#chunk-" + chunkId).remove(); });
     chunkCount -= 1;
 }
 
@@ -161,7 +203,7 @@ function resetAddChunkForm() {
 
 function setEditChunkForm(chunkId) {
     $("#edit-chunk-id").val(chunkId);
-    $("#edit-chunk-name").val($("#chunk-" + chunkId).children("h2.chunk-name").text());
+    $("#edit-chunk-name").val($("#chunk-" + chunkId).children("div.chunk-name").text());
     $("#edit-chunk-mins").val($("#chunk-" + chunkId + " .chunk-mins").text());
 }
 
@@ -173,15 +215,17 @@ function setActiveChunkId(chunkId) {
     $("#chunk-" + chunkId + " .play-button").hide();
     $("#chunk-" + chunkId + " .pause-button").show();
 
-    
+
     $(".active-chunk").removeClass("active-chunk");
     $("#chunk-" + chunkId).addClass("active-chunk");
 
 
-    if (chunkId > 0){
+    navigator.vibrate(10);
+
+    if (chunkId > 0) {
         window.plugins.insomnia.keepAwake();
     }
-    else{
+    else {
         window.plugins.insomnia.allowSleepAgain();
     }
 }
