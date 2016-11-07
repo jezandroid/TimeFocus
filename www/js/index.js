@@ -91,9 +91,9 @@ function globalTick() {
 
         $(".exp_" + activeChunkId).donutpie('update', newData);
 
-        if (newElapsedSecs = remainingSecs){
-            navigator.vibrate(1000);
-        }
+        // if (newElapsedSecs = remainingSecs){
+        //     navigator.vibrate(1000);
+        // }
 
     }
     // we can also record how time has been spent on every tick
@@ -101,7 +101,7 @@ function globalTick() {
 }
 
 function addChunk(chunkId, chunkName, chunkMins) {
-    var htmlBlock = "<li data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
+    var htmlBlock = "<li data-chunk-id='" + chunkId + "'  data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk doubleTap'>"
     htmlBlock += "<div class='donut-time exp_" + chunkId + "'></div>"
     htmlBlock += "<div class='start-stop'>"
     htmlBlock += "<a class='play-button' href='#' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
@@ -110,7 +110,7 @@ function addChunk(chunkId, chunkName, chunkMins) {
     
     htmlBlock += "</div>"
     
-    htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
+    // htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
     htmlBlock += "<div class='chunk-name'>" + chunkName + "</div>"
     htmlBlock += "<div class='edit'>"
     htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
@@ -127,7 +127,7 @@ function addChunk(chunkId, chunkName, chunkMins) {
 
     var data = [
         { "name": "elapsed", "hvalue": 0, "color": "#FFFFFF" },
-        { "name": "remaining", "hvalue": 1, "color": "#000000" }
+        { "name": "remaining", "hvalue": chunkMins * 60, "color": "#000000" }
     ];
 
     // $(".exp").donutpie();
@@ -136,8 +136,8 @@ function addChunk(chunkId, chunkName, chunkMins) {
         radius: 85,
         tooltip: false
     });
+    // $(".exp_" + chunkId).donutpie('updateTotal', $("#chunk-" + activeChunkId).attr("data-total-secs"));
     $(".exp_" + chunkId).donutpie('update', data);
-    $(".exp_" + chunkId).donutpie
 
 
     // $('<div/>', {
@@ -173,6 +173,8 @@ function editChunk(chunkId, chunkName, chunkMins) {
     //set its mins to chunkMins
     $("#chunk-" + chunkId).children("div.chunk-name").text(chunkName);
     $("#chunk-" + chunkId + " .chunk-mins").text(chunkMins);
+    $("#chunk-" + chunkId).attr("data-total-secs", chunkMins*60)
+
     // $("#chunk-" + chunkId).children("p").children("span.chunk-mins").text(chunkMins + " mins"); //NOT WORKING
     // $("#chunk-" + chunkId + " > .chunk-name").val(chunkName);
     // $("#chunk-" + chunkId + " > .chunk-mins").val(chunkMins);
@@ -204,7 +206,7 @@ function resetAddChunkForm() {
 function setEditChunkForm(chunkId) {
     $("#edit-chunk-id").val(chunkId);
     $("#edit-chunk-name").val($("#chunk-" + chunkId).children("div.chunk-name").text());
-    $("#edit-chunk-mins").val($("#chunk-" + chunkId + " .chunk-mins").text());
+    $("#edit-chunk-mins").val($("#chunk-" + chunkId).attr("data-total-secs")/60);
 }
 
 function setActiveChunkId(chunkId) {
@@ -229,6 +231,33 @@ function setActiveChunkId(chunkId) {
         window.plugins.insomnia.allowSleepAgain();
     }
 }
+
+//doubleTap - not native to jQuery Mobile
+(function($) {
+     $.fn.doubleTap = function(doubleTapCallback) {
+         return this.each(function(){
+			var elm = this;
+			var lastTap = 0;
+			$(elm).bind('vmousedown', function (e) {
+                                var now = (new Date()).valueOf();
+				var diff = (now - lastTap);
+                                lastTap = now ;
+                                if (diff < 250) {
+		                    if($.isFunction( doubleTapCallback ))
+		                    {
+		                       doubleTapCallback.call(elm);
+		                    }
+                                }      
+			});
+         });
+    }
+})(jQuery);
+
+//  put class="doubleTap" on the elements you need to double tap
+$(".doubleTap").doubleTap(function(){
+			// 'this' is the element that was double tap
+            alert(this.attr("data-total-secs"))
+  });
 
 
 
