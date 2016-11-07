@@ -18,11 +18,41 @@
 		this.svg.append("g")
 			.attr("class", "slices");
 		// TimeFocus A
-		var timetext = this.svg.append("text")
-		 	.attr("class","timetext");
-			 timetext.text('0:00')
-			 timetext.attr("alignment-baseline","central")
-			 timetext.attr("text-anchor","middle")
+		var timetextgroup = this.svg.append("g")
+			.attr("class", "timetextgroup");
+
+			var elapsed_time = timetextgroup.append("text")
+				.attr("class", "elapsed-time")
+				.attr("text-anchor", "middle")
+				.attr("dy","-2");
+				// .attr("alignment-baseline", "central");
+
+				var elapsed_mins = elapsed_time.append("tspan")
+					.attr("class", "elapsed-mins")
+					.text('00');
+
+				var elapsed_colon = elapsed_time.append("tspan")
+					.attr("class", "elapsed-colon")
+					.text(':');
+
+				var elapsed_secs = elapsed_time.append("tspan")
+					.attr("class", "elapsed-secs")
+					.text('00');
+				// elapsed_secs.attr("text-anchor", "right")
+			
+			var total_time = timetextgroup.append("text")
+				.attr("class", "total-time")
+				.attr("text-anchor", "middle")
+				.attr("dy","16");
+
+			var total_mins = total_time.append("tspan")
+					.attr("class", "total-mins")
+					.text('00');
+
+			total_time.append("tspan")
+					.attr("class", "total-mins-mins")
+					.text(' mins');					
+
 		// TimeFocus B
 
 		this.pie = d3.layout.pie()
@@ -57,8 +87,18 @@
 
 	DonutPie.prototype.update = function(data) {
 		
-		//TimeFocus
-		this.svg.select("text.timetext").text(data[0]['hvalue'])
+		//TimeFocus START
+		var elapsed_mins_val = parseInt(data[0]['hvalue']/60);
+		if (elapsed_mins_val < 10){elapsed_mins_val = "0" + elapsed_mins_val}
+		var elapsed_secs_val = data[0]['hvalue']-(elapsed_mins_val*60);
+		if (elapsed_secs_val < 10){elapsed_secs_val = "0" + elapsed_secs_val}
+
+		this.svg.select("tspan.elapsed-mins").text(elapsed_mins_val);
+		this.svg.select("tspan.elapsed-secs").text(elapsed_secs_val);
+
+		var total_mins_val = parseInt((data[0]['hvalue'] + data[1]['hvalue'])/60);
+		this.svg.select("tspan.total-mins").text(total_mins_val);
+		//TimeFocus END
 
 		// check if all the items has colors.
 		var colors = d3.scale.category20().range();
@@ -117,6 +157,13 @@
 		    .remove();
 
 	};
+
+
+	//TimeFocus START
+	// DonutPie.prototype.updateTotal = function(totalSecs) {
+	// 	this.svg.select("tspan.total-mins").text(parseInt(totalSecs/60);
+	// };
+	//TimeFocus END
 
 	$.fn.donutpie = function(option) {
 	  
