@@ -101,7 +101,7 @@ function globalTick() {
 }
 
 function addChunk(chunkId, chunkName, chunkMins) {
-    var htmlBlock = "<li data-chunk-id='" + chunkId + "'  data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk doubleTap'>"
+    var htmlBlock = "<li data-chunk-id='" + chunkId + "'  data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
     htmlBlock += "<div class='donut-time exp_" + chunkId + "'></div>"
     htmlBlock += "<div class='start-stop'>"
     htmlBlock += "<a class='play-button' href='#' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
@@ -112,9 +112,9 @@ function addChunk(chunkId, chunkName, chunkMins) {
     
     // htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
     htmlBlock += "<div class='chunk-name'>" + chunkName + "</div>"
-    htmlBlock += "<div class='edit'>"
-    htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
-    htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='edit-button' ><i class='zmdi zmdi-edit zmd-2x'></i></a>"
+    // htmlBlock += "<div class='edit'>"
+    // htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
+    // htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='edit-button' ><i class='zmdi zmdi-edit zmd-2x'></i></a>"
     // htmlBlock += "<a class='delete-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:deleteChunk(" + chunkId + ");'><i class='zmdi zmdi-delete zmd-2x'></i></a>"    
 
     htmlBlock += "</div>"
@@ -139,6 +139,20 @@ function addChunk(chunkId, chunkName, chunkMins) {
     // $(".exp_" + chunkId).donutpie('updateTotal', $("#chunk-" + activeChunkId).attr("data-total-secs"));
     $(".exp_" + chunkId).donutpie('update', data);
 
+
+    $('#chunk-' + chunkId).on('doubletap', function (event) {
+        event.preventDefault();//workaround to prevent double firing
+        setEditChunkForm(chunkId);
+        var audio = new Audio('sounds/button1.wav');
+        audio.play();
+        $("#popupEditChunk").popup("open");
+    });
+
+    $('#chunk-' + chunkId).on('swipeleft', function (event) {;
+        var audio = new Audio('sounds/button1.wav');
+        audio.play();
+        deleteChunk(chunkId);
+    });
 
     // $('<div/>', {
     //     "id": 'foo',
@@ -184,7 +198,7 @@ function deleteChunk(chunkId) {
     if (activeChunkId == chunkId) {
         activeChunkId = 0;
     }
-    $("#chunk-" + chunkId).slideUp("slow", function () { $("#chunk-" + chunkId).remove(); });
+    $("#chunk-" + chunkId).animate({ 'margin-left': '-1000px'}, 1000, function () { $("#chunk-" + chunkId).slideUp('fast'); });
     chunkCount -= 1;
 }
 
@@ -232,32 +246,7 @@ function setActiveChunkId(chunkId) {
     }
 }
 
-//doubleTap - not native to jQuery Mobile
-(function($) {
-     $.fn.doubleTap = function(doubleTapCallback) {
-         return this.each(function(){
-			var elm = this;
-			var lastTap = 0;
-			$(elm).bind('vmousedown', function (e) {
-                                var now = (new Date()).valueOf();
-				var diff = (now - lastTap);
-                                lastTap = now ;
-                                if (diff < 250) {
-		                    if($.isFunction( doubleTapCallback ))
-		                    {
-		                       doubleTapCallback.call(elm);
-		                    }
-                                }      
-			});
-         });
-    }
-})(jQuery);
 
-//  put class="doubleTap" on the elements you need to double tap
-$(".doubleTap").doubleTap(function(){
-			// 'this' is the element that was double tap
-            alert(this.attr("data-total-secs"))
-  });
 
 
 
