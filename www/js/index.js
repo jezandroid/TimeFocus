@@ -53,6 +53,20 @@ var app = {
             }
         });
 
+        var listholder = document.getElementById('listholder');//$("#listholder");
+
+        listholder.addEventListener('slip:reorder', function (e) {
+            e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+            return false;
+        }, false);
+
+    listholder.addEventListener('slip:beforeswipe', function(e){
+            //we don't want slip's swipe event to conflict with jquerymobile's
+            e.preventDefault();
+    }, false);        
+        
+        new Slip(listholder);
+
     },
     // Update DOM on a Received Event
     receivedEvent: function (id) {
@@ -106,10 +120,10 @@ function addChunk(chunkId, chunkName, chunkMins) {
     htmlBlock += "<div class='start-stop'>"
     htmlBlock += "<a class='play-button' href='#' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
     htmlBlock += "<a style='display: none;' class='pause-button' href='#' onclick='javascript:setActiveChunkId(0);'><i class='zmdi zmdi-pause zmd-2x'></i></a>"
-        
-    
+
+
     htmlBlock += "</div>"
-    
+
     // htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
     htmlBlock += "<div class='chunk-name'>" + chunkName + "</div>"
     // htmlBlock += "<div class='edit'>"
@@ -119,8 +133,8 @@ function addChunk(chunkId, chunkName, chunkMins) {
 
     htmlBlock += "</div>"
 
-// class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'
-    
+    // class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'
+
 
     htmlBlock += "</li>"
     $("#listholder").append(htmlBlock);
@@ -148,11 +162,18 @@ function addChunk(chunkId, chunkName, chunkMins) {
         $("#popupEditChunk").popup("open");
     });
 
-    $('#chunk-' + chunkId).on('swipeleft', function (event) {;
+    $('#chunk-' + chunkId).on('swipeleft', function (event) {
         var audio = new Audio('sounds/button1.wav');
         audio.play();
         deleteChunk(chunkId);
     });
+
+
+
+
+    // $('#chunk-' + chunkId).on('taphold', function (event) {
+    //     $("#listholder").sortable();
+    // });
 
     // $('<div/>', {
     //     "id": 'foo',
@@ -187,7 +208,7 @@ function editChunk(chunkId, chunkName, chunkMins) {
     //set its mins to chunkMins
     $("#chunk-" + chunkId).children("div.chunk-name").text(chunkName);
     $("#chunk-" + chunkId + " .chunk-mins").text(chunkMins);
-    $("#chunk-" + chunkId).attr("data-total-secs", chunkMins*60)
+    $("#chunk-" + chunkId).attr("data-total-secs", chunkMins * 60)
 
     // $("#chunk-" + chunkId).children("p").children("span.chunk-mins").text(chunkMins + " mins"); //NOT WORKING
     // $("#chunk-" + chunkId + " > .chunk-name").val(chunkName);
@@ -198,8 +219,8 @@ function deleteChunk(chunkId) {
     if (activeChunkId == chunkId) {
         activeChunkId = 0;
     }
-    $("#chunk-" + chunkId).animate({ 'margin-left': '-1000px'}, 1000, function () { $("#chunk-" + chunkId).slideUp('fast'); });
-    chunkCount -= 1;
+    $("#chunk-" + chunkId).animate({ 'margin-left': '-1000px' }, 1000, function () { $("#chunk-" + chunkId).slideUp('fast'); });
+    // chunkCount -= 1;
 }
 
 $("#btn_add_chunk").on("tap", function () {
@@ -220,7 +241,7 @@ function resetAddChunkForm() {
 function setEditChunkForm(chunkId) {
     $("#edit-chunk-id").val(chunkId);
     $("#edit-chunk-name").val($("#chunk-" + chunkId).children("div.chunk-name").text());
-    $("#edit-chunk-mins").val($("#chunk-" + chunkId).attr("data-total-secs")/60);
+    $("#edit-chunk-mins").val($("#chunk-" + chunkId).attr("data-total-secs") / 60);
 }
 
 function setActiveChunkId(chunkId) {
