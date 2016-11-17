@@ -116,8 +116,8 @@ function globalTick() {
 
 function addChunk(chunkId, chunkName, chunkMins) {
     var htmlBlock = "<li data-chunk-id='" + chunkId + "'  data-total-secs='" + chunkMins * 60 + "' data-elapsed-secs='0' id='chunk-" + chunkId + "' class='ui-li-static ui-body-inherit chunk'>"
-    htmlBlock += "<div class='donut-time exp_" + chunkId + "'></div>"
-    htmlBlock += "<div class='start-stop'>"
+    // htmlBlock += "<div class='row middle-xs'>"
+    htmlBlock += "<div class='start-stop vcentre'>"
     htmlBlock += "<a class='play-button' href='#' onclick='javascript:setActiveChunkId(" + chunkId + ");'><i class='zmdi zmdi-play zmd-2x'></i></a>"
     htmlBlock += "<a style='display: none;' class='pause-button' href='#' onclick='javascript:setActiveChunkId(0);'><i class='zmdi zmdi-pause zmd-2x'></i></a>"
 
@@ -125,18 +125,21 @@ function addChunk(chunkId, chunkName, chunkMins) {
     htmlBlock += "</div>"
 
     // htmlBlock += "<div class='time'><span class='chunk-elapsed-mins'>0</span>:<span class='chunk-elapsed-secs'>00</span> / <span class='chunk-mins'>" + chunkMins + "</span> mins</div>"
-    htmlBlock += "<div class='chunk-name'>" + chunkName + "</div>"
+
     // htmlBlock += "<div class='edit'>"
     // htmlBlock += "<a data-rel='popup' data-position-to='window' data-role='button' data-inline='true' data-transition='pop' href='#popupEditChunk' "
     // htmlBlock += "onclick='javascript:setEditChunkForm(" + chunkId + ");' class='edit-button' ><i class='zmdi zmdi-edit zmd-2x'></i></a>"
     // htmlBlock += "<a class='delete-button' href='#' class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button' onclick='javascript:deleteChunk(" + chunkId + ");'><i class='zmdi zmdi-delete zmd-2x'></i></a>"    
 
-    htmlBlock += "</div>"
 
+
+    htmlBlock += "<div class='donut-time exp_" + chunkId + "'></div>"
     // class='ui-btn ui-btn-inline ui-mini waves-effect waves-button waves-effect waves-button'
 
+    htmlBlock += "<div class='chunk-name vcentre'>" + chunkName + "</div>"
 
     htmlBlock += "</li>"
+    // htmlBlock += "</div></li>"
     $("#listholder").append(htmlBlock);
 
     var data = [
@@ -219,7 +222,7 @@ function deleteChunk(chunkId) {
     if (activeChunkId == chunkId) {
         activeChunkId = 0;
     }
-    $("#chunk-" + chunkId).animate({ 'margin-left': '-1000px' }, 1000, function () { $("#chunk-" + chunkId).slideUp('fast'); });
+    $("#chunk-" + chunkId).animate({ 'margin-left': '-1000px','margin-right': '1000px' }, 1000, function () { $("#chunk-" + chunkId).slideUp('fast'); });
     // chunkCount -= 1;
 }
 
